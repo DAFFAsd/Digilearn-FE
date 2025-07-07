@@ -14,6 +14,7 @@ interface Class {
   created_at: string;
   updated_at: string;
   is_enrolled?: boolean;
+  image_url?: string | null;
 }
 
 const ClassList = () => {

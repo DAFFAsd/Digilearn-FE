@@ -7,7 +7,17 @@ import remarkMath from 'remark-math';
 import remarkGfm from 'remark-gfm';
 import rehypeKatex from 'rehype-katex';
 import 'katex/dist/katex.min.css';
-import { useTable, useSortBy, useGlobalFilter } from 'react-table';
+import {
+  useReactTable,
+  getCoreRowModel,
+  getSortedRowModel,
+  getFilteredRowModel,
+  flexRender,
+  createColumnHelper,
+  type ColumnDef,
+  type SortingState,
+  type ColumnFiltersState,
+} from '@tanstack/react-table';
 
 // API URL from environment
 const API_URL = import.meta.env.VITE_API_URL || '/api';
@@ -52,6 +62,84 @@ const AssignmentSubmissions = () => {
   const [gradingLoading, setGradingLoading] = useState(false);
   const [gradingError, setGradingError] = useState<string | null>(null);
   const [gradingSuccess, setGradingSuccess] = useState(false);
+
+  // Table state
+  const [sorting, setSorting] = useState<SortingState>([
+    { id: 'submitted_at', desc: true }
+  ]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [globalFilter, setGlobalFilter] = useState('');
+
+  // Column helper for type safety
+  const columnHelper = createColumnHelper<Submission>();
+
+  // Define columns using the new API
+  const columns = useMemo<ColumnDef<Submission>[]>(() => [
+    columnHelper.accessor('username', {
+      header: 'Student',
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor('submitted_at', {
+      header: 'Submitted',
+      cell: (info) => new Date(info.getValue()).toLocaleString(),
+    }),
+    columnHelper.accessor('updated_at', {
+      header: 'Updated',
+      cell: (info) => {
+        const updatedAt = info.getValue();
+        const submittedAt = info.row.original.submitted_at;
+        return updatedAt !== submittedAt 
+          ? new Date(updatedAt).toLocaleString() 
+          : '-';
+      },
+    }),
+    columnHelper.accessor('grade', {
+      header: 'Grade',
+      cell: (info) => {
+        const grade = info.getValue();
+        return grade !== null && grade !== undefined ? `${grade}/100` : 'Not graded';
+      },
+    }),
+    columnHelper.display({
+      id: 'actions',
+      header: 'Actions',
+      cell: (info) => (
+        <button
+          onClick={() => setSelectedSubmission(info.row.original)}
+          className="text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300"
+        >
+          View
+        </button>
+      ),
+    }),
+  ], [columnHelper]);
+
+  // Filter submissions based on search term
+  const filteredSubmissions = useMemo(() => {
+    return submissions.filter(submission =>
+      submission.username.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [submissions, searchTerm]);
+
+  // Setup react-table
+  const table = useReactTable({
+    data: filteredSubmissions,
+    columns,
+    state: {
+      sorting,
+      columnFilters,
+      globalFilter,
+    },
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    onGlobalFilterChange: setGlobalFilter,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    initialState: {
+      sorting: [{ id: 'submitted_at', desc: true }],
+    },
+  });
 
   // Function to handle grading a submission
   const handleGradeSubmission = async () => {
@@ -147,59 +235,6 @@ const AssignmentSubmissions = () => {
     fetchData();
   }, [id, user, navigate]);
 
-  // Setup for react-table
-  const columns = useMemo(() => [
-    {
-      Header: 'Student',
-      accessor: 'username',
-    },
-    {
-      Header: 'Submitted',
-      accessor: 'submitted_at',
-      Cell: ({ value }: { value: string }) => new Date(value).toLocaleString(),
-    },
-    {
-      Header: 'Updated',
-      accessor: 'updated_at',
-      Cell: ({ value, row }: { value: string, row: any }) =>
-        value !== row.original.submitted_at
-          ? new Date(value).toLocaleString()
-          : '-',
-    },
-    {
-      Header: 'Grade',
-      accessor: 'grade',
-      Cell: ({ value }: { value: number | null }) =>
-        value !== null && value !== undefined ? `${value}/100` : 'Not graded',
-    }
-  ], []);
-
-  // Filter submissions based on search term
-  const filteredSubmissions = useMemo(() => {
-    return submissions.filter(submission =>
-      submission.username.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }, [submissions, searchTerm]);
-
-  // Setup react-table
-  const tableInstance = useTable(
-    {
-      columns,
-      data: filteredSubmissions,
-      initialState: { sortBy: [{ id: 'submitted_at', desc: true }] }
-    },
-    useGlobalFilter,
-    useSortBy
-  );
-
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow,
-  } = tableInstance;
-
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -277,60 +312,53 @@ const AssignmentSubmissions = () => {
               </div>
             ) : (
               <div className="overflow-x-auto">
-                <table {...getTableProps()} className="min-w-full divide-y divide-secondary-200 dark:divide-dark-border">
+                <table className="min-w-full divide-y divide-secondary-200 dark:divide-dark-border">
                   <thead className="bg-secondary-50 dark:bg-gray-700">
-                    {headerGroups.map(headerGroup => (
-                      <tr {...headerGroup.getHeaderGroupProps()}>
-                        {headerGroup.headers.map(column => (
+                    {table.getHeaderGroups().map(headerGroup => (
+                      <tr key={headerGroup.id}>
+                        {headerGroup.headers.map(header => (
                           <th
-                            {...column.getHeaderProps(column.getSortByToggleProps())}
-                            className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-dark-muted uppercase tracking-wider"
+                            key={header.id}
+                            className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-dark-muted uppercase tracking-wider cursor-pointer select-none"
+                            onClick={header.column.getToggleSortingHandler()}
                           >
-                            {column.render('Header')}
-                            <span>
-                              {column.isSorted
-                                ? column.isSortedDesc
-                                  ? ' 🔽'
-                                  : ' 🔼'
-                                : ''}
-                            </span>
+                            <div className="flex items-center space-x-1">
+                              {header.isPlaceholder ? null : (
+                                <>
+                                  {flexRender(
+                                    header.column.columnDef.header,
+                                    header.getContext()
+                                  )}
+                                  {{
+                                    asc: ' 🔼',
+                                    desc: ' 🔽',
+                                  }[header.column.getIsSorted() as string] ?? null}
+                                </>
+                              )}
+                            </div>
                           </th>
                         ))}
-                        <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-dark-muted uppercase tracking-wider">
-                          Actions
-                        </th>
                       </tr>
                     ))}
                   </thead>
-                  <tbody {...getTableBodyProps()} className="bg-white dark:bg-gray-800 divide-y divide-secondary-200 dark:divide-dark-border">
-                    {rows.map(row => {
-                      prepareRow(row);
-                      return (
-                        <tr
-                          {...row.getRowProps()}
-                          className={`hover:bg-secondary-50 dark:hover:bg-gray-700 ${
-                            selectedSubmission?.id === row.original.id ? 'bg-secondary-100 dark:bg-gray-700' : ''
-                          }`}
-                        >
-                          {row.cells.map(cell => (
-                            <td
-                              {...cell.getCellProps()}
-                              className="px-6 py-4 whitespace-nowrap text-sm text-secondary-900 dark:text-dark-text"
-                            >
-                              {cell.render('Cell')}
-                            </td>
-                          ))}
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary-900 dark:text-dark-text">
-                            <button
-                              onClick={() => setSelectedSubmission(row.original)}
-                              className="text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300"
-                            >
-                              View
-                            </button>
+                  <tbody className="bg-white dark:bg-gray-800 divide-y divide-secondary-200 dark:divide-dark-border">
+                    {table.getRowModel().rows.map(row => (
+                      <tr
+                        key={row.id}
+                        className={`hover:bg-secondary-50 dark:hover:bg-gray-700 ${
+                          selectedSubmission?.id === row.original.id ? 'bg-secondary-100 dark:bg-gray-700' : ''
+                        }`}
+                      >
+                        {row.getVisibleCells().map(cell => (
+                          <td
+                            key={cell.id}
+                            className="px-6 py-4 whitespace-nowrap text-sm text-secondary-900 dark:text-dark-text"
+                          >
+                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
                           </td>
-                        </tr>
-                      );
-                    })}
+                        ))}
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>

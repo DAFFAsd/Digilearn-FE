@@ -9,7 +9,6 @@ import Register from './components/auth/Register';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import Unauthorized from './components/auth/Unauthorized';
 import Dashboard from './components/dashboard/Dashboard';
-import ComingSoon from './components/common/ComingSoon';
 import AssignmentList from './components/assignments/AssignmentList';
 import AssignmentDetail from './components/assignments/AssignmentDetail';
 import AssignmentSubmission from './components/assignments/AssignmentSubmission';
