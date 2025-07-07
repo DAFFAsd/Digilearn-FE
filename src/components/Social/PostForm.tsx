@@ -6,13 +6,27 @@ import ImagePasteHandler from '../common/ImagePasteHandler';
 // API URL from environment
 const API_URL = import.meta.env.VITE_API_URL || '/api';
 
+interface Post {
+  id: number;
+  content: string;
+  image_url: string | null;
+  created_at: string;
+  updated_at: string;
+  user_id: number;
+  username: string;
+  comment_count: number;
+}
+
 interface PostFormProps {
+  post?: Post;
   onPostCreated: () => void;
   initialContent?: string;
   initialImageUrl?: string | null;
   initialEntityType?: string;
   initialEntityId?: string;
   isEditing?: boolean;
+  onPostUpdated?: () => void;
+  onCancel?: () => void;
   postId?: number;
 }
 

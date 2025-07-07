@@ -122,6 +122,7 @@ const PostCard = ({
             post={post}
             isEditing={true}
             onPostUpdated={handlePostUpdated}
+            onPostCreated={() => {}} // Dummy function since we're editing, not creating
             onCancel={onCancelEdit}
           />
         </div>
