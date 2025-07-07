@@ -251,15 +251,6 @@ const Navbar = () => {
                 </div>
                 <div className="mobile-menu-item">
                   <Link
-                    to="/social"
-                    className={`block py-2 px-3 ${isActive('/social') ? 'text-white font-medium bg-primary-600/20 dark:bg-primary-900/30' : 'text-primary-100 hover:text-white dark:text-primary-200 dark:hover:text-white'} transition-colors menu-item rounded-md`}
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Social
-                  </Link>
-                </div>
-                <div className="mobile-menu-item">
-                  <Link
                     to="/profile"
                     className={`flex items-center py-2 px-3 ${isActive('/profile') ? 'text-white font-medium bg-primary-600/20 dark:bg-primary-900/30' : 'text-primary-100 hover:text-white dark:text-primary-200 dark:hover:text-white'} transition-colors menu-item rounded-md`}
                     onClick={() => setMobileMenuOpen(false)}

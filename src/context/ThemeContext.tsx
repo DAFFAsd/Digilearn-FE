@@ -52,7 +52,7 @@ export const ThemeProvider = ({ children }: ThemeProviderProps) => {
     console.log('Theme effect triggered with theme:', theme);
 
     const lightThemeColor = '#f8fafc';
-    const darkThemeColor = '#121212';
+    const darkThemeColor = '#00000000';
     const themeColor = theme === 'dark' ? darkThemeColor : lightThemeColor;
     
     // Update localStorage
