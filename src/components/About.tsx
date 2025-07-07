@@ -14,13 +14,13 @@ const About = () => {
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY + 100;
-      
+     
       for (const section of sections) {
         const element = document.getElementById(section.id);
         if (element) {
           const offsetTop = element.offsetTop;
           const offsetBottom = offsetTop + element.offsetHeight;
-          
+         
           if (scrollPosition >= offsetTop && scrollPosition < offsetBottom) {
             setActiveSection(section.id);
             break;
@@ -33,7 +33,7 @@ const About = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const scrollToSection = (sectionId: string) => {
+  const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -72,7 +72,7 @@ const About = () => {
           {/* Main Content */}
           <div className="flex-1 max-w-4xl">
             <div className="card dark:bg-gradient-to-r dark:from-gray-800 dark:to-gray-700 dark:border dark:border-dark-border">
-              
+             
               {/* Overview Section */}
               <section id="overview" className="mb-12">
                 <div className="flex items-center gap-3 mb-4">
@@ -81,8 +81,27 @@ const About = () => {
                 </div>
                 <div className="prose prose-secondary dark:prose-invert max-w-none">
                   <p className="text-lg text-secondary-600 dark:text-dark-muted mb-6">
-                    Welcome to Digilab - your digital laboratory for academic excellence. This comprehensive guide contains all the information you need about our facilities, equipment, and regulations.
+                    Welcome to Digilab - your digital laboratory for DTE FTUI Digital Labs Academic Excellence. This comprehensive guide contains all the information you need about our facilities, equipment, and regulations.
                   </p>
+                  
+                  {/* Lab Team Photo */}
+                  <div className="mb-8">
+                    <div className="relative overflow-hidden rounded-xl shadow-lg aspect-video">
+                      <img 
+                        src="https://res.cloudinary.com/dnkkk7pgw/image/upload/v1751865718/1751865645595_qht6gq.jpg" 
+                        alt="Digilab Team - Lab Assistants Group Photo"
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                      <div className="absolute bottom-4 left-4 right-4">
+                        <h3 className="text-white text-xl font-bold mb-1">Meet Our Lab Team</h3>
+                        <p className="text-white/90 text-sm">
+                          Our dedicated lab assistants are here to help you succeed in your academic journey
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
                     <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
                       <div className="text-2xl mb-2">💻</div>
@@ -113,7 +132,7 @@ const About = () => {
                   <p className="text-secondary-700 dark:text-dark-muted mb-6">
                     All students have access to the public computers. Please follow these steps to use and borrow a PC for project work.
                   </p>
-                  
+                 
                   <div className="mb-8">
                     <h3 className="text-xl font-semibold mb-4 text-secondary-800 dark:text-dark-text flex items-center gap-2">
                       <span className="text-blue-500">🖥️</span>
@@ -121,7 +140,7 @@ const About = () => {
                     </h3>
                     <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
                       <p className="text-secondary-700 dark:text-dark-muted">
-                        For general use during lab hours, simply find an available PC and log in using your student credentials. 
+                        For general use during lab hours, simply find an available PC and log in using your student credentials.
                         <strong className="text-blue-700 dark:text-blue-300"> Ensure you log out after your session is complete</strong> to protect your data.
                       </p>
                     </div>
@@ -154,10 +173,10 @@ const About = () => {
                       <h4 className="font-semibold text-amber-800 dark:text-amber-300">Important Reminders</h4>
                     </div>
                     <ul className="text-amber-700 dark:text-amber-400 space-y-1">
-                      <li>• You are responsible for the PC's condition during the loan period</li>
-                      <li>• Report any issues immediately</li>
-                      <li>• Save your work on cloud storage or external drives</li>
-                      <li>• Local data may be wiped periodically for maintenance</li>
+                      <li>You are responsible for the PC's condition during the loan period</li>
+                      <li>Report any issues immediately</li>
+                      <li>Save your work on cloud storage or external drives</li>
+                      <li>Local data may be wiped periodically for maintenance</li>
                     </ul>
                   </div>
                 </div>
@@ -173,7 +192,7 @@ const About = () => {
                   <p className="text-secondary-700 dark:text-dark-muted mb-6">
                     Specialized lab equipment, such as <strong>oscilloscopes</strong> and <strong>microcontrollers</strong>, is available for borrowing for academic purposes.
                   </p>
-                  
+                 
                   <div className="mb-8">
                     <h3 className="text-xl font-semibold mb-4 text-secondary-800 dark:text-dark-text flex items-center gap-2">
                       <span className="text-purple-500">📋</span>
@@ -205,7 +224,7 @@ const About = () => {
                       <h4 className="font-semibold text-red-800 dark:text-red-300">Your Responsibilities</h4>
                     </div>
                     <p className="text-red-700 dark:text-red-400">
-                      You are <strong>financially responsible</strong> for any damage or loss of borrowed equipment. 
+                      You are <strong>financially responsible</strong> for any damage or loss of borrowed equipment.
                       Handle all items with care and use them only for their intended purpose.
                     </p>
                   </div>
@@ -222,7 +241,7 @@ const About = () => {
                   <p className="text-secondary-700 dark:text-dark-muted mb-6">
                     Adherence to these regulations is <strong>mandatory</strong> for all students participating in lab practicums.
                   </p>
-                  
+                 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
                       <div className="flex items-center gap-2 mb-3">
@@ -295,6 +314,9 @@ const About = () => {
                       <h4 className="font-semibold text-secondary-900 dark:text-dark-text mb-2">Lab Assistant</h4>
                       <p className="text-secondary-700 dark:text-dark-muted text-sm">
                         For PC borrowing forms and general assistance
+                      </p>
+                      <p className="text-secondary-700 dark:text-dark-muted text-sm">
+                        @giovan
                       </p>
                     </div>
                     <div className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700">
