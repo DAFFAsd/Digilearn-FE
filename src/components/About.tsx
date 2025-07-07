@@ -76,7 +76,6 @@ const About = () => {
               {/* Overview Section */}
               <section id="overview" className="mb-12">
                 <div className="flex items-center gap-3 mb-4">
-                  <span className="text-2xl">📋</span>
                   <h1 className="text-3xl font-bold text-secondary-900 dark:text-dark-text">Digilab Information Center</h1>
                 </div>
                 <div className="prose prose-secondary dark:prose-invert max-w-none">
@@ -85,22 +84,57 @@ const About = () => {
                   </p>
                   
                   {/* Lab Team Photo */}
-                  <div className="mb-8">
-                    <div className="relative overflow-hidden rounded-xl shadow-lg aspect-video">
-                      <img 
-                        src="https://res.cloudinary.com/dnkkk7pgw/image/upload/v1751865718/1751865645595_qht6gq.jpg" 
-                        alt="Digilab Team - Lab Assistants Group Photo"
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-                      <div className="absolute bottom-4 left-4 right-4">
-                        <h3 className="text-white text-xl font-bold mb-1">Meet Our Lab Team</h3>
-                        <p className="text-white/90 text-sm">
-                          Our dedicated lab assistants are here to help you succeed in your academic journey
-                        </p>
-                      </div>
+               {/* Lab Team Photo - Fixed with inline styles */}
+                <div style={{ marginBottom: '1.5rem' }}>
+                  <div style={{ 
+                    position: 'relative', 
+                    overflow: 'hidden', 
+                    borderRadius: '0.75rem', 
+                    boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                    height: '280px'
+                  }}>
+                    <img 
+                      src="https://res.cloudinary.com/dnkkk7pgw/image/upload/v1751865718/1751865645595_qht6gq.jpg" 
+                      alt="Digilab Team - Lab Assistants Group Photo"
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        objectPosition: 'center',
+                        display: 'block'
+                      }}
+                    />
+                    <div style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      background: 'linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 50%, transparent 100%)'
+                    }}></div>
+                    <div style={{
+                      position: 'absolute',
+                      bottom: '1rem',
+                      left: '1rem',
+                      right: '1rem',
+                      color: 'white'
+                    }}>
+                      <h3 style={{
+                        fontSize: '1.25rem',
+                        fontWeight: 'bold',
+                        marginBottom: '0.25rem',
+                        margin: 0
+                      }}>Meet Our Lab Team</h3>
+                      <p style={{
+                        fontSize: '0.875rem',
+                        opacity: 0.9,
+                        margin: 0
+                      }}>
+                        Our dedicated lab assistants are here to help you succeed in your academic journey
+                      </p>
                     </div>
                   </div>
+                </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
                     <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
