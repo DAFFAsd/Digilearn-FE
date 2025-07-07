@@ -172,7 +172,7 @@ const Register = () => {
               </div>
             </div>
             <p className="mt-1 text-xs text-secondary-500 dark:text-dark-muted">
-              Note: Guest access is automatic without registration
+              Note: Your password will be stored safely and will not be shared with anyone.
             </p>
           </div>
 
